@@ -1,0 +1,51 @@
+@{
+    Layout=null;
+}
+@model RegisterViewModel
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kayıt Ol</title>
+  <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 500px;">
+      <h3 class="text-center mb-4">Kayıt Ol</h3>
+      <form asp-controller="Users" asp-action="Register" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+          <label asp-for="Name" class="form-label">Ad Soyad</label>
+          <input asp-for="Name" class="form-control" id="fullname" placeholder="Adınızı girin">
+        </div>
+        <div class="mb-3">
+          <label asp-for="UserName" class="form-label">Kullanıcı Adı</label>
+          <input asp-for="UserName" class="form-control" id="email" placeholder="user00">
+        </div>
+        <div class="mb-3">
+          <label asp-for="Mail" class="form-label">E-posta</label>
+          <input asp-for="Mail" class="form-control" id="email" placeholder="ornek@mail.com">
+        </div>
+        <div class="mb-3">
+          <label asp-for="Password" class="form-label">Şifre</label>
+          <input asp-for="Password" class="form-control" id="password" placeholder="Şifre oluşturun">
+        </div>
+        <div class="mb-3">
+          <label asp-for="ConfirmPassword" class="form-label">Şifreyi Onayla</label>
+          <input asp-for="ConfirmPassword" class="form-control" id="confirm-password" placeholder="Şifreyi tekrar yazın">
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-danger">Kaydol</button>
+        </div>
+      </form>
+      <div class="text-center mt-3">
+        <small>Zaten hesabınız var mı? <a asp-controller="Users" asp-action="Login">Giriş Yap</a></small>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

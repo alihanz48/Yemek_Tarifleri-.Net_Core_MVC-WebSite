@@ -1,0 +1,206 @@
+@{
+    ViewData["Title"] = Model.username + " Profili";
+}
+@model User
+@section style {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .profile-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .user-photo {
+            width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .section-title {
+            margin-top: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 5px;
+        }
+    </style>
+}
+
+<!-- View içine -->
+<div id="pop-up">
+
+</div>
+
+
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sol taraf: Kullanıcı bilgileri -->
+        <div class="col-md-4">
+            <div class="profile-card text-center">
+                <img src="/user-img/@Model.avatarName" alt="Kullanıcı Fotoğrafı" class="user-photo mb-3">
+                <form asp-controller="User" asp-action="">
+                    <input class="form-control" id="ProfilePhoto" type="file">
+                </form>
+                <button class="btn btn-primary" id="ChangePp" style="margin-top: 2% ;">Profil Resmini Değiştir</button>
+                <hr>
+                @if (ViewData["result"] == "success")
+                {
+                    <div class="alert alert-success" role="alert">
+                        Güncelleme başarılı!
+                    </div>
+                }
+                else if (ViewData["result"].ToString() == "emailsuccess")
+                {
+                    <div class="alert alert-success" role="alert">
+                        Email Güncelleme başarılı!
+                    </div>
+                }
+                <form asp-controller="Users" asp-action="MyAccount" method="post">
+                    <input type="hidden" asp-for="UserId" value="@Model.UserId">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" asp-for="Name">Ad Soyad:</label>
+                        <input type="text" value="@Model.Name" asp-for="Name" class="form-control"
+                            placeholder="İsim Soyisim">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="username">Kullanıcı adı:</label>
+                        <input asp-for="username" type="text" value="@Model.username" class="form-control"
+                            placeholder="İsim Soyisim">
+                    </div>
+                    <input type="submit" class="btn btn-primary mt-3 w-100" asp-controller="Users"
+                        asp-action="MyAccount" value="Kaydet">
+                </form>
+                <hr>
+                <p><strong>Mail:</strong>@Model.mail</p>
+                <a class="btn btn-primary rounded mb-3" asp-controller="Users" asp-action="MailUpdate">Mail
+                    Güncelleme</a>
+                <p><strong>Kayıt tarihi:</strong> @Model.KayitTarihi</p>
+                <p><strong>Rol:</strong>@Model.Roles.RoleName</p>
+            </div>
+        </div>
+
+        <!-- Sağ taraf: Yayınlanan yemekler ve yorumlar -->
+        <div class="col-md-8">
+            <div class="profile-card container mt-4">
+                <div class="section-title mb-3 fs-4 fw-bold border-bottom pb-2">Yayınladığı Yemekler</div>
+                <ul class="list-group mb-4">
+                    @foreach (var food in Model.Foods)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <a href="/yemek/@food.url"
+                                    class="d-flex flex-row align-items-start text-decoration-none w-100">
+                                    <img src="/food-img/@food.Images[0].name" class="rounded me-3"
+                                        style="width: 150px; height: auto;" alt="Yemek Görseli">
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-1">@food.isim</h5>
+                                        <p class="mb-0 text-muted">@food.aciklama</p>
+                                    </div>
+                                </a>
+                                @if (food.Confirmation == FoodStatus.Pending)
+                                {
+                                    <div class="ms-auto d-flex gap-2">
+                                        <a class="btn btn-sm btn-warning trashBtn">
+                                            <i class="bi bi-clock-history"></i> Onay Bekleniyor
+                                        </a>
+                                    </div>
+                                }
+                                else if(food.Confirmation==FoodStatus.Denial){
+                                    <div class="ms-auto d-flex gap-2">
+                                        <a class="btn btn-sm btn-danger trashBtn">
+                                            <i class="bi bi-x"></i> Red edildi
+                                        </a>
+                                        <a href="/remove/@food.url" class="btn btn-sm btn-danger trashBtn">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="ms-auto d-flex gap-2">
+                                        <a href="/foodedit/@food.url" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/remove/@food.url" class="btn btn-sm btn-danger trashBtn">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                }
+
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                <div class="section-title mb-3 fs-4 fw-bold border-bottom pb-2">Yorumlar</div>
+                <ul class="list-group">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <strong>
+                                    <a href="/yemek/@comment.Foods.url" class="me-2">@comment.Foods.isim:</a>
+                                </strong>
+                                <span class="me-2">"@comment.Text"</span>
+                                <small class="text-muted">Tarih: @comment.PublishDate.ToShortDateString()</small>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                <div class="section-title mb-3 fs-4 fw-bold border-bottom pb-2">Beğeniler</div>
+                <ul class="list-group">
+                    @foreach (var like in Model.Likes)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <div>
+                                    <img src="/food-img/@like.foods.Images[0].name" class="rounded me-3"
+                                        style="width: 150px; height: auto;" alt="Yemek Görseli">
+                                </div>
+                                <strong>
+                                    <a href="/yemek/@like.foods.url" class="me-2">@like.foods.isim</a>
+                                </strong>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var formdata = new FormData();
+
+        $("#ProfilePhoto").on("change", function () {
+            formdata.append("profilePhoto", this.files[0]);
+        });
+
+        $("#ChangePp").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ChangeProfilePhoto")',
+                dataType: 'json',
+                data: formdata,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    location.reload();
+                }
+            });
+        });
+
+    });
+</script>

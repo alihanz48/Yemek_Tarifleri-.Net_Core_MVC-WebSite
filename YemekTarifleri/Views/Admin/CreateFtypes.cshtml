@@ -1,0 +1,86 @@
+@model CreateFtypes
+
+<div class="container mt-5">
+    <div class="d-flex align-items-center mb-3">
+        <h1 class="h4 mb-0">Yemek Türü Ekle</h1>
+        <small class="text-muted ms-3">Yemek Tarifleri Sitesi</small>
+    </div>
+    <div class="table-responsive shadow rounded">
+        <table class="table table-bordered table-hover align-middle bg-white"
+            style="width:95%;margin-left:auto;margin-right:auto;margin-top:2%;">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 80px;">Type Id</th>
+                    <th>İsim</th>
+                    <th style="width: 150px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ftype in Model.Ftypes)
+                {
+                    <tr class="ftype-row">
+                        <td>@ftype.TypeID</td>
+                        <td name="ftypename">@ftype.Name</td>
+                        <td>
+                            <a data-id="@ftype.TypeID" class="btn btn-primary editftypes"><i class="bi bi-pencil"></i></a>
+                            <a asp-controller="Admin" asp-action="RemoveFtypes" asp-route-id="@ftype.TypeID"
+                                class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td></td>
+                    <td>
+                        <form action="CreateFtypes" method="post" style="display: flex;">
+                            <input type="text" asp-for="FtypeName" placeholder="Ftype ismi" class="form-control"
+                                style="width: 50%;">
+                            <input type="submit" class="form-control btn btn-success"
+                                style="margin-left: 10px; width:25%" value="Ekle">
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).on("click", ".editftypes", function () {
+            var edit=$(this);
+            var cell = edit.closest(".ftype-row").find('td[name="ftypename"]');
+            var text=cell.text();
+            var id=edit.data("id");
+            cell.html('');
+            cell.append(`
+              <div style="display: flex;">
+                <input type="text" value="${text}" class="form-control newftypes" style="width: 50%;">
+                <button class="form-control btn btn-success edit-ok" data-id="${id}" style="margin-left: 10px; width:25%">Kaydet</button>
+              </div>
+            `);
+        })
+
+        $(document).on("click",".edit-ok",function(){
+            var okbtn=$(this);
+            var text=okbtn.closest(".ftype-row").find('.newftypes').val();
+            var id=okbtn.data("id");
+
+            var formdata=new FormData();
+            formdata.append("text",text);
+            formdata.append("id",id);
+
+            $.ajax({
+                type:'POST',
+                url:'@Url.Action("EditFtypes")',
+                dataType:'json',
+                data:formdata,
+                contentType:false,
+                processData:false,
+                success:function(result){
+                    window.location.href="/Admin/CreateFtypes";
+                }
+            });
+        })
+    })
+</script>

@@ -1,0 +1,18 @@
+@model Food
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card shadow p-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body text-center">
+            <h4 class="card-title text-danger mb-3">Yemeği Silmek Üzeresiniz</h4>
+            <p class="card-text">"<strong>@Model.isim</strong>" adlı yemeği silmek istediğinize emin misiniz?</p>
+            <p class="text-muted mb-4">Bu işlem geri alınamaz!</p>
+            <form method="post" asp-action="RemoveFood" asp-controller="Food">
+                <input type="hidden" asp-for="FoodId" value="@Model.FoodId">
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                    <a asp-action="MyAccount" asp-controller="Users" class="btn btn-secondary">Hayır, Vazgeç</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+@{
+  Layout=null;
+}
+@model MailUpdateViewModel
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>E-posta Güncelle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4" style="width: 100%; max-width: 450px;">
+      <h4 class="text-center mb-4">E-posta Güncelle</h4>
+      
+      <form asp-controller="Users" asp-action="MailUpdate" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <!-- Mevcut E-posta -->
+        <div class="mb-3">
+          <label class="form-label">Mevcut E-posta</label>
+          <input class="form-control" asp-for="CurrentMail" id="currentEmail" readonly>
+        </div>
+
+        <!-- Yeni E-posta -->
+        <div class="mb-3">
+          <label asp-for="NewMail" class="form-label">Yeni E-posta</label>
+          <input asp-for="NewMail" type="email" class="form-control" placeholder="yeniemail@example.com" required>
+        </div>
+
+        <!-- Şifre -->
+        <div class="mb-4">
+          <label asp-for="Password" class="form-label">Şifreniz</label>
+          <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Şifrenizi girin" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">E-posta Güncelle</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>

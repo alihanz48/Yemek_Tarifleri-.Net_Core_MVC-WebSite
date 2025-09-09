@@ -1,0 +1,14 @@
+@model SearchDataViewModel
+
+<form asp-controller="Home" asp-action="Search" class="d-flex mx-3 flex-grow-1 justify-content-center"
+   style="max-width: 600px;">
+   <select class="form-select" asp-for="category" style="max-width:130px;">
+      <option value="-1"selected>Kategori</option>
+      @foreach (var ftype in Model.ftypes)
+      {
+         <option value="@ftype.Url">@ftype.Name</option>
+      }
+   </select>
+   <input class="form-control" asp-for="query" type="text" placeholder="Tarif ara..." />
+   <button class="btn btn-outline-danger" type="submit">Ara</button>
+</form>

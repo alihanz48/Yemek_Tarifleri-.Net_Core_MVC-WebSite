@@ -1,0 +1,66 @@
+@{
+    Layout=null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Sayfa Bulunamadı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Open+Sans&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            background: #fff8f0;
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .error {
+            font-size: 10rem;
+            font-weight: bold;
+            color: #ff6b35;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .message {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .food-icon {
+            width: 200px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+
+        a {
+            text-decoration: none;
+            padding: 12px 25px;
+            background-color: #ff6b35;
+            color: white;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #e65a29;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="error">404</div>
+    <img class="food-icon" src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="Yemek ikonu">
+    <div class="message">Üzgünüz, aradığınız sayfa fırında biraz fazla kaldı 🍕</div>
+    <a href="/">Anasayfaya Dön</a>
+
+</body>
+</html>

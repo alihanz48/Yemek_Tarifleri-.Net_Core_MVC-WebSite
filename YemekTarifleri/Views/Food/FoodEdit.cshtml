@@ -1,0 +1,341 @@
+@{
+    ViewData["title"] = "Yemek Düzenle";
+}
+
+@model AddFoodViewModel
+
+
+@section style {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .photo-box {
+            width: 120px;
+            height: 120px;
+            background-color: #f8f9fa;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+    </style>
+
+}
+<div class="container py-5">
+    <h2 class="mb-4">Yemek Düzenle</h2>
+    <div id="addCheck" class="col-md-12"></div>
+    <div class="row g-4">
+        <!-- Sol: Fotoğraflar -->
+        <div class="col-md-5">
+            <div class="addCheck"></div>
+            <div id="fimages"></div>
+            <div id="f-images" class="row gy-2 gx-2">
+                <!-- resimler  -->
+                @{
+                    var iix = 0;
+                }
+                @foreach (string img in Model.imgForEdit)
+                {
+                    iix++;
+                    <div class="col-4 position-relative fir-com" name="photoDiv" data-id="@iix">
+                        <div class="photo-box border rounded p-1 mb-2">
+                            <button type="button"
+                                class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 delete-image" title="Sil"
+                                style="z-index: 2;">&times;</button>
+                            <img src="/food-img/@img" style="width: 100%; height: auto;" class="img-fluid rounded" />
+                            <input type="hidden" class="deletedImg" name="photoName" value="@img">
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <div class="mt-4">
+                <input class="form-control" id="images" type="file" multiple>
+            </div>
+
+        </div>
+
+        <!-- Sağ: Form -->
+        <div class="col-md-7">
+            <div class="mb-4">
+                <label class="form-label" for="foodName">Yemeğin İsmi</label>
+                <div id="fname"></div>
+                <input type="text" class="form-control" id="foodName" value="@Model.isim"
+                    placeholder="Bir isim ekleyin" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="foodDescription">Açıklama</label>
+                <div id="fdesc"></div>
+                <input type="text" class="form-control" id="foodDescription" value="@Model.aciklama"
+                    placeholder="Bir açıklama ekleyin" />
+            </div>
+
+            <!-- İçindekiler -->
+            <div class="mb-4">
+                <label class="form-label">İçindekiler</label>
+                <div id="ingDiv"></div>
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" id="ingredientText" placeholder="Bir malzeme ekleyin" />
+                    <button class="btn btn-outline-secondary" id="addIngredient" type="button">Ekle</button>
+                </div>
+                <ul class="list-group" id="ingredients">
+                    <!-- içindekiler -->
+                    @foreach (string ingredient in Model.ingredients)
+                    {
+                        <div id="Ingredient" name="IngredientDiv">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div class="d-flex edit-area">
+                                    <i class="bi bi-arrow-right"></i>
+                                    <p class="mb-0 ms-2" id="text">@ingredient</p>
+                                    <input type="hidden" id="iinpt" name="ingredientsInput" value="@ingredient">
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary delIngredient" type="button"><i
+                                            class="bi bi-trash3"></i></button>
+                                    <button class="btn btn-danger editIngredient" type="button"><i
+                                            class="bi bi-pencil"></i></button>
+                                </div>
+                            </li>
+                        </div>
+                    }
+                </ul>
+            </div>
+
+            <!-- Adımlar -->
+            <div class="mb-4">
+                <label class="form-label">Adımlar</label>
+                <div id="stepDiv"></div>
+                <div class="input-group mb-2">
+                    <input type="text" id="stepText" class="form-control" placeholder="Bir adım ekleyin" />
+                    <button class="btn btn-outline-secondary" id="Addsteps" type="button">Ekle</button>
+                </div>
+                <ol class="list-group list-group-numbered" id="steps">
+                    <!-- adımlar -->
+                    @foreach (string step in Model.steps)
+                    {
+                        <div id="step">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div class="d-flex" id="sdiv">
+                                    <i class="bi bi-arrow-right"></i>
+                                    <p class="mb-0 ms-2" id="stext">@step</p>
+                                    <input type="hidden" id="sinpt" name="stepsInput" value="@step">
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary delStep" type="button"><i
+                                            class="bi bi-trash3"></i></button>
+                                    <button class="btn btn-danger editStep" type="button"><i
+                                            class="bi bi-pencil"></i></button>
+                                </div>
+                            </li>
+                        </div>
+                    }
+                </ol>
+            </div>
+
+            <!-- Etiketler -->
+            <div class="mb-3">
+                <label class="form-label">Etiketler</label>
+                <div class="row">
+                    @foreach (var ftype in Model.Ftypes)
+                    {
+                        <div class="col-6 col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" id="tag_@ftype.TypeID" type="checkbox" value="@ftype.TypeID"
+                                    name="ftypeIDs" @(Model.selectFtypes.Any(t => t == ftype.TypeID) ? "checked" : "") />
+                                <label class="form-check-label" for="tag_@ftype.TypeID">@ftype.Name</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <input id="url" type="hidden" value="@Model.foodUrl">
+
+            <button class="btn btn-primary mt-3" id="EditFood" type="button">Düzenlemeyi Tamamla</button>
+        </div> <!-- ./col-md-7 -->
+    </div> <!-- ./row -->
+</div> <!-- ./container -->
+
+<script>
+    $(document).ready(function () {
+
+        var formdata = new FormData();
+        var selectedImages = [];
+
+        $(document).on("click", ".delete-image", function () {
+            if ($(this).closest('#f-images').find('div[name="photoDiv"]').length == 1) {
+                alert("Tüm resimler silinemez!!!");
+            } else {
+                delete selectedImages[$(this).closest('div[name="photoDiv2"]').data("id")];
+                $(this).closest('div[name="photoDiv"]').remove();
+                formdata.append("deletedImg", $(this).closest('div[name="photoDiv"]').find(".deletedImg").val());
+            }
+
+        })
+
+
+        $(document).on("change", "#images", function () {
+            selectedImages = [...this.files];
+            [...this.files].forEach((img) => {
+
+                const url = URL.createObjectURL(img);
+                $("#f-images").append(`
+            <div class="col-4 position-relative" name="photoDiv">
+                <div class="photo-box border rounded p-1 mb-2" name="photoDiv2" data-id="${selectedImages.indexOf(img)}">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 delete-image" title="Sil" style="z-index: 2;">&times;</button>
+                    <img src="${url}" style="width: 100%; height: auto;" class="img-fluid rounded" />
+                </div>
+            </div>
+               `);
+            });
+
+        });
+
+        $(document).on("click", ".delIngredient", function () {
+            formdata.append("deletedIngredients", $(this).closest('div[name="IngredientDiv"]').find("#iinpt").val())
+            $(this).closest('div[name="IngredientDiv"]').remove();
+        })
+
+        $(document).on("click", ".editIngredient", function () {
+
+            var ingText = $(this).closest('div[name="IngredientDiv"]').find("#iinpt").val();
+            $(this).closest('div[name="IngredientDiv"]').find("#text").remove();
+            $(this).closest('div[name="IngredientDiv"]').find("#iinpt").remove();
+            $(this).closest('div[name="IngredientDiv"]').find(".edit-area").append(`<input class="form-control" id="newIngredient" value="${ingText}">`);
+            $(this).closest('div[name="IngredientDiv"]').find(".edit-area").append(`<button class="btn btn-success editOKIngredient" id="ingOKbtn"><i class="bi bi-check2"></i></button>`);
+            formdata.append("oldIng", ingText);
+        })
+
+        $(document).on("click", ".editOKIngredient", function () {
+            var newText = $(this).closest('div[name="IngredientDiv"]').find("#newIngredient").val();
+            $(this).closest('div[name="IngredientDiv"]').find(".edit-area").append(`
+              <p class="mb-0 ms-2" id="text">${newText}</p>
+              <input type="hidden" id="iinpt" name="ingredientsInput" value="${newText}">
+            `);
+            $(this).closest('div[name="IngredientDiv"]').find("#newIngredient").remove();
+            $(this).closest('div[name="IngredientDiv"]').find(".editOKIngredient").remove();
+            formdata.append("newIng", newText);
+        })
+
+
+
+        $(document).on("click", ".delStep", function () {
+            formdata.append("deletedStep", $(this).closest('div[id="step"]').find("#sinpt").val())
+            $(this).closest('div[id="step"]').remove();
+        })
+
+        $(document).on("click", ".editStep", function () {
+
+            var stepText = $(this).closest('div[id="step"]').find("#sinpt").val();
+            $(this).closest('div[id="step"]').find("#sinpt").remove();
+            $(this).closest('div[id="step"]').find("#stext").remove();
+            $(this).closest('div[id="step"]').find("#sdiv").append(`<input class="form-control" id="newStep" value="${stepText}">`);
+            $(this).closest('div[id="step"]').find("#sdiv").append(`<button class="btn btn-success editOKStep" id="stepOKbtn"><i class="bi bi-check2"></i></button>`);
+            formdata.append("oldstep", stepText);
+        })
+
+        $(document).on("click", ".editOKStep", function () {
+            var newstepText = $(this).closest('div[id="step"]').find("#newStep").val();
+            $(this).closest('div[id="step"]').find("#sdiv").append(`
+              <p class="mb-0 ms-2" id="stext">${newstepText}</p>
+              <input type="hidden" id="sinpt" name="stepsInput" value="${newstepText}">
+            `);
+            $(this).closest('div[id="step"]').find("#newStep").remove();
+            $(this).closest('div[id="step"]').find(".editOKStep").remove();
+            formdata.append("newstep", newstepText);
+        })
+
+        $("#addIngredient").click(function () {
+            var ing = $("#ingredientText").val();
+            formdata.append("addIng", ing);
+
+            $('#ingredients').append(`<div id="Ingredient" name="IngredientDiv">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div class="d-flex edit-area">
+                                    <i class="bi bi-arrow-right"></i>
+                                    <p class="mb-0 ms-2" id="text">${ing}</p>
+                                    <input type="hidden" id="iinpt" name="ingredientsInput" value="${ing}">
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary delIngredient" type="button"><i
+                                            class="bi bi-trash3"></i></button>
+                                    <button class="btn btn-danger editIngredient" type="button"><i
+                                            class="bi bi-pencil"></i></button>
+                                </div>
+                            </li>
+                        </div>
+            `);
+
+            $("#ingredientText").val('');
+        });
+
+        $("#Addsteps").click(function () {
+            var step = $("#stepText").val();
+            formdata.append("addStep", step);
+
+            $("#steps").append(`<div id="step">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div class="d-flex" id="sdiv">
+                                    <i class="bi bi-arrow-right"></i>
+                                    <p class="mb-0 ms-2" id="stext">${step}</p>
+                                    <input type="hidden" id="sinpt" name="stepsInput" value="${step}">
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary delStep" type="button"><i
+                                            class="bi bi-trash3"></i></button>
+                                    <button class="btn btn-danger editStep" type="button"><i
+                                            class="bi bi-pencil"></i></button>
+                                </div>
+                            </li>
+                        </div>`);
+        });
+
+
+
+        $("#EditFood").click(function (event) {
+            event.preventDefault();
+            formdata.append("url", $("#url").val());
+            formdata.append("FoodName", $("#foodName").val());
+            formdata.append("Aciklama", $("#foodDescription").val());
+
+            //formdata addIng ile yeni ingredientler kayıt ediliyor.
+            //formdata addStep ile yeni stepler kayıt ediliyor.
+
+            $('input[name="ftypeIDs"]:checked').map(function () {
+                formdata.append("ftypes", $(this).val());
+            }).get();
+
+            selectedImages.forEach((img) => {
+                formdata.append("img", img);
+            });
+
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("FoodEdit")',
+                dataType: 'json',
+                data: formdata,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    $("#addCheck").append(`
+              <div class="alert alert-success" role="alert">
+                Yemeğiniz başarıyla güncellendi !  Yönlendiriliyorsunuz...
+              </div>
+             `);
+                    setTimeout(function () {
+                        window.location.assign("/Users/MyAccount");
+                    }, 1000);
+                }
+            })
+        });
+
+
+    });
+</script>

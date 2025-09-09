@@ -1,0 +1,102 @@
+@model User
+@{
+    ViewData["Title"] = Model.username + " Profili";
+}
+@section style {
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .profile-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .user-photo {
+            width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .section-title {
+            margin-top: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 5px;
+        }
+    </style>
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sol taraf: Kullanıcı bilgileri -->
+        <div class="col-md-4">
+            <div class="profile-card text-center">
+                <img src="/user-img/@Model.avatarName" alt="Kullanıcı Fotoğrafı" class="user-photo mb-3">
+                <h4>@Model.Name</h4>
+                <p class="text-muted">@Model.username</p>
+                <hr>
+                <p><strong>Mail:</strong>@Model.mail</p>
+                <p><strong>Kayıt tarihi:</strong> @Model.KayitTarihi</p>
+                <p><strong>Rol:</strong>@Model.Roles.RoleName</p>
+            </div>
+        </div>
+
+        <!-- Sağ taraf: Yayınlanan yemekler ve yorumlar -->
+        <div class="col-md-8">
+            <div class="profile-card">
+                <div class="section-title">Yayınladığı Yemekler</div>
+                <ul class="list-group mb-4">
+                    @foreach (var food in Model.Foods)
+                    {
+                        <a href="/yemek/@food.url" style="text-decoration: none;">
+                            <li class="list-group-item">
+                                <div class="d-flex">
+                                    <img src="/food-img/@food.Images[0].name" class="rounded" style="width: 150px; " alt="">
+                                    <div class="px-3">
+                                        <h4>@food.isim</h4>
+                                        <p>&nbsp;&nbsp;&nbsp;@food.aciklama</p>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </a>
+                    }
+                </ul>
+
+                <div class="section-title">Yorumlar</div>
+                <ul class="list-group">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li class="list-group-item">
+                            <strong><a href="/yemek/@comment.Foods.url">@comment.Foods.isim:</a></strong> &nbsp;&nbsp;&nbsp;
+                            "@comment.Text" &nbsp;&nbsp;&nbsp; Tarih:@comment.PublishDate.ToShortDateString()
+                        </li>
+                    }
+
+                </ul>
+
+                <div class="section-title mb-3 fs-4 fw-bold border-bottom pb-2">Beğeniler</div>
+                <ul class="list-group">
+                    @foreach (var like in Model.Likes)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <div>
+                                    <img src="/food-img/@like.foods.Images[0].name" class="rounded me-3"
+                                        style="width: 150px; height: auto;" alt="Yemek Görseli">
+                                </div>
+                                <strong>
+                                    <a href="/yemek/@like.foods.url" class="me-2">@like.foods.isim</a>
+                                </strong>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

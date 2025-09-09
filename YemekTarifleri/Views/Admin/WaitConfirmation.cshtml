@@ -1,0 +1,46 @@
+@model FoodsViewModel
+
+<div class="container mt-5">
+    <div class="d-flex align-items-center mb-3">
+        <h1 class="h4 mb-0">Onay Bekleyen Yemekler</h1>
+        <small class="text-muted ms-3">Yemek Tarifleri Sitesi</small>
+    </div>
+    <div class="table-responsive shadow rounded">
+        
+        <table class="table table-bordered table-hover align-middle bg-white"
+            style="width:95%;margin-left:auto;margin-right:auto;margin-top:2%;">
+            <thead class="table-dark">
+                <tr>
+                    <th>Yemek Id</th>
+                    <th>Resim</th>
+                    <th>İsim</th>
+                    <th>Açıklama</th>
+                    <th>Oluşturulma Tarihi</th>
+                    <th>Düzenlenme Tarihi</th>
+                    <th style="width: 150px;">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var food in Model.foods)
+                {
+                        <tr>
+                            <td>@food.FoodId</td>
+                            <td><img src="/food-img/@food.Images[0].name" style="width: 150px;height:100px;"></td>
+                            <td>@food.isim</td>
+                            <td>@food.aciklama</td>
+                            <td>@food.tarih</td>
+                            <td>@food.EditTime</td>
+                            <td>
+                                <a asp-controller="Admin" asp-action="view" asp-route-id="@food.url" class="btn btn-primary" style="margin-bottom: 5px; width:130px;"><i class="bi bi-eye"></i> Görüntüle</a>
+                                <a asp-controller="Admin" asp-action="FoodConfirm" asp-route-id="@food.url" class="btn btn-success" style="margin-bottom: 5px; width:130px;"><i class="bi bi-check2-circle"></i> Onayla</a>
+                                <a asp-controller="Admin" asp-action="FoodDenial" asp-route-id="@food.url" class="btn btn-danger" style="width: 130px;"><i class="bi bi-x-circle"></i> Ret</a>
+                            </td>
+                        </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

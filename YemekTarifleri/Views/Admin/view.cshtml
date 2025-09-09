@@ -1,0 +1,173 @@
+@using System.Net
+@using Microsoft.AspNetCore.Identity
+@{
+  ViewData["Title"] = ViewData["Food_name"];
+}
+
+
+@section style {
+  <link rel="stylesheet" href="/css/details.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+}
+
+@model FoodDetails
+
+<main class="container mb-5" style="margin-top: 50px;">
+  @if (User.FindFirstValue(ClaimTypes.Role) == "admin")
+  {
+    <div style="background-color: burlywood;" class="mb-3">
+      <form action="/Admin/setFtype" method="post">
+        <input type="hidden" asp-for="FoodId" value="@Model.food.FoodId">
+        <input type="hidden" name="returnUrl" value="/Admin/view/@Model.food.url">
+        @foreach (var ftype in Model.ftypes)
+        {
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="@ftype.TypeID" name="ftypeIds[]"
+              @(Model.food.Ftypes.Any(i => i.TypeID == ftype.TypeID) ? "checked" : "")>
+            <label class="form-check-label" for="checkDefault">
+              @ftype.Name
+            </label>
+          </div>
+        }
+        <input type="submit" class="btn btn-primary" value="Düzenle">
+      </form>
+    </div>
+  }
+
+  <div class="d-flex align-items-center">
+    <img src="/user-img/@Model.food.Users.avatarName" alt="Avatar" class="avatar me-3">
+    <div>
+      <a href="/user/@Model.food.Users.username">
+        <h5 class="mb-0">@Model.food.Users.Name</h5>
+      </a>
+      <small class="text-muted">@Model.food.Users.username</small>
+    </div>
+  </div>
+  <div class="col-md">
+    <small class="text-muted">Paylaşılma Tarihi : @Model.food.tarih.ToShortDateString()</small><br>
+    @if (Model.food.EditTime != null)
+    {
+      <small class="text-muted">Son Düzenlenme Tarihi : @Model.food.EditTime.Value.ToShortDateString()</small>
+    }
+  </div>
+  <hr>
+  @foreach (var tagName in Model.food.Ftypes)
+  {
+    <a href="/yemekler/@tagName.Url"><span class="badge bg-warning text-light"
+        style="font-size:small;">#@tagName.Name</span></a>
+  }
+  <hr>
+
+  <div class="row align-items-start">
+    <div class="col-lg-6 mb-3 mb-lg-0">
+      <img src="/food-img/@Model.food.Images.FirstOrDefault(t => t.type == "main")?.name" style="width:100%;height:auto"
+        class="main-photo" />
+      <input id="FoodID" type="hidden" value="@Model.FoodId">
+    </div>
+    <div class="col-lg-6">
+      <h1>@Model.food.isim</h1>
+      <hr>
+      <h4>Açıklama</h4>
+      <p>@Model.food.aciklama</p>
+      <hr>
+      <h4>Malzemeler</h4>
+      <ul>
+        @foreach (var ingredient in Model.food.Ingredients)
+        {
+          <li>@ingredient.Text</li>
+        }
+      </ul>
+      <hr>
+      <h4>Yapılışı</h4>
+      <ol>
+        @foreach (var step in Model.food.Steps)
+        {
+          <li>@step.Text</li>
+        }
+
+      </ol>
+
+    </div>
+  </div>
+  <hr>
+  <!-- Fotoğraf galerisi -->
+  <div class="container-img">
+    @foreach (var img in Model.food.Images)
+    {
+      <a href="/food-img/@img.name" class="glightbox" data-gallery="food-gallery">
+        <div class="image-box">
+          <img src="/food-img/@img.name" alt="Resim" />
+        </div>
+      </a>
+
+    }
+  </div>
+
+  <hr>
+
+  <div style="display: flex; align-items: center; gap: 30px;">
+    <!-- Like Section -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div id="likebtn">
+        @if (User.Identity!.IsAuthenticated && Model.food.Likes.Any(u => u.userId ==
+                int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!)))
+        {
+          <button id="like" class="text-danger"
+            style="font-size: 1.5rem; border: none; background: none; cursor: pointer;">
+            <i class="bi bi-heart-fill"></i>
+          </button>
+        }
+        else
+        {
+          <button id="like" class="text-dark" style="font-size: 1.5rem; border: none; background: none; cursor: pointer;">
+            <i class="bi bi-heart"></i>
+          </button>
+        }
+      </div>
+      <div id="likeCount">
+        <span id="likeCountText" style="font-size: 1.2rem; font-weight: 500;">@Model.food.Likes.Count</span>
+      </div>
+    </div>
+
+    <!-- Comment Section -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div>
+        <i class="bi bi-chat-left-text" style="font-size: 1.5rem; color: #6c757d;"></i>
+      </div>
+      <div>
+        <span id="commentCount" style="font-size: 1.2rem; font-weight: 500;">@Model.food.Comments.Count</span>
+      </div>
+    </div>
+  </div>
+
+
+  <hr>
+
+  <!-- Yorumlar Bölümü -->
+  <section>
+    <h4 class="mb-3">Yorumlar</h4>
+
+    <div id="comments-list">
+      @foreach (var comment in Model.food.Comments)
+      {
+        <div name="comment" class="container my-4" data-id="@comment.CommentID">
+          <div class="card p-3" style="max-width: 100%;">
+            <div class="d-flex align-items-center mb-3">
+              <img src="/user-img/@comment.Users.avatarName" alt="Avatar" class="rounded-circle me-3" width="50"
+                height="50" />
+              <div>
+                <h6 class="mb-0"><a href="/user/@comment.Users.username">@comment.Users.username</a></h6>
+                <small class="text-muted">@comment.PublishDate.ToShortDateString()</small>
+              </div>
+            </div>
+            <p class="mb-0">
+              @comment.Text
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</main>

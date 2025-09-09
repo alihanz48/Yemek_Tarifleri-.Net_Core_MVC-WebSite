@@ -1,0 +1,65 @@
+@model setRolesModel
+
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-3">
+        <h1 class="h4 mb-0">Kullanıcı Yönetimi</h1>
+        <small class="text-muted ms-3">Yemek Tarifleri Sitesi</small>
+    </div>
+
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="usersTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">İsim</th>
+                            <th scope="col">E‑posta</th>
+                            <th scope="col">Kayıt Tarihi</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Yetkilendir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.users)
+                        {
+                            <tr>
+                                <td>@user.UserId</td>
+                                <td>@user.Name</td>
+                                <td>@user.mail</td>
+                                <td>@user.KayitTarihi</td>
+                                <td>@user.Roles.RoleName</td>
+                                <td>
+                                    <form method="post" asp-controller="Admin" asp-action="setRole">
+                                            <input type="hidden" asp-for="UserId" value="@user.UserId">
+                                            <select asp-for="RoleId">
+                                                <option value="-1"></option>
+                                                @foreach(var role in Model.roles){
+                                                   <option asp-for="RoleId" value="@role.RoleId" >
+                                                     @role.RoleName
+                                                    </option>
+                                                }
+                                            </select>
+                                            <input type="submit" class="btn btn-primary" style="margin-bottom: 10px;"
+                                                value="Yetkilendir">
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    <small id="resultCount" class="text-muted"></small>
+                </div>
+                <nav>
+                    <ul class="pagination mb-0" id="pagination"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+@{
+  Layout = null;
+  var userName = User.FindFirstValue(ClaimTypes.Email);
+}
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <title>Çıkış Yap</title>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      flex: 1;
+      transition: background-color 0.3s;
+    }
+
+    .btn-exit {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-exit:hover {
+      background-color: #c82333;
+    }
+
+    .btn-cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-cancel:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>@userName, Çıkış yapmak istiyor musunuz?</h1>
+    <div class="buttons">
+      <a type="button" class="btn btn-danger" asp-controller="Users" asp-action="LogOut">Çıkış yap</a>
+      <a type="button" class="btn btn-light" asp-controller="Home" asp-action="Index">Devam Et</a>
+    </div>
+  </div>
+</body>
+
+</html>

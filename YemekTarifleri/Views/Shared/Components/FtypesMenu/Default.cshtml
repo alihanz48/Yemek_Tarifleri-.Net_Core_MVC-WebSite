@@ -1,0 +1,17 @@
+@model List<Ftype>
+
+<div class="container py-4 bg-warning bg-opacity-25 rounded mt-4">
+    <h2 class="mb-4 text-center text-danger fw-bold">Yemek Türleri</h2>
+    <div class="row g-4">
+        @foreach (var ftype in Model)
+        {
+            <div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center">
+                <a href="/yemekler/@ftype.Url" 
+                   class="btn btn-danger btn-sm shadow px-4 py-3 w-100 text-center fw-semibold text-white" 
+                   role="button" style="font-size: 1.1rem;">
+                    @ftype.Name
+                </a>
+            </div>
+        }
+    </div>
+</div>

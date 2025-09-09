@@ -1,0 +1,61 @@
+@{
+  Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+
+@model LoginViewModel
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Giriş Yap</title>
+  <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+      @if (ViewData["result"].ToString() == "success")
+      {
+        <div class="alert alert-success" role="alert">Kayıt başarılı giriş yapabilirsiniz!</div>
+      }
+      @if (ViewData["result"].ToString() == "error")
+      {
+        <div class="alert alert-danger" role="alert">Kullanıcı adı veya şifre yanlış!</div>
+      }
+      <h3 class="text-center mb-4">Giriş Yap</h3>
+      <form asp-controller="Users" asp-action="Login" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @{
+          var returnUrl=ViewData["returnUrl"];
+        }
+        <input type="hidden" name="fUrl" value="@returnUrl">
+        <div class="mb-3">
+          <label asp-for="passString" class="form-label">Kullanıcı Adı/E-posta</label>
+          <input asp-for="passString" class="form-control" id="email" placeholder="ornek@mail.com">
+        </div>
+        <div class="mb-3">
+          <label asp-for="password" class="form-label">Şifre</label>
+          <input asp-for="password" class="form-control" id="password" placeholder="Şifrenizi girin">
+        </div>
+        <div class="mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" asp-for="beniHatirla">
+            <label class="form-check-label" asp-for="beniHatirla">Beni Hatırla</label>
+          </div>
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-danger">Giriş Yap</button>
+        </div>
+      </form>
+      <div class="text-center mt-3">
+        <small>Hesabınız yok mu? <a asp-controller="Users" asp-action="Register">Kaydol</a></small>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
