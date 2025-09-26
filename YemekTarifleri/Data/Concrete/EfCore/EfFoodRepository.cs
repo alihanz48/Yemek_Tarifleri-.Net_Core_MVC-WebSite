@@ -67,23 +67,26 @@ public class EfFoodRepository : IFoodRepository
                 EntityFood.Images.Add(image);
             });
 
-            food.deletedIngredients.ForEach(di => EntityFood.Ingredients.Remove(EntityFood.Ingredients.FirstOrDefault(i => i.Text == di)));
+
+            
 
             int a = 0;
-            food.oldIng.ForEach(oi =>
+            food.ingredientIDs!.ForEach(iids =>
             {
-                EntityFood.Ingredients.FirstOrDefault(i => i.Text == oi).Text = food.newIng[a];
+                EntityFood.Ingredients.FirstOrDefault(i => i.IngredientsID == int.Parse(iids)).Text = food.newIng[a];
                 a++;
             });
 
-            food.deletedStep.ForEach(ds => EntityFood.Steps.Remove(EntityFood.Steps.FirstOrDefault(s => s.Text == ds)));
+            food.deletedIngredients.ForEach(di => EntityFood.Ingredients.Remove(EntityFood.Ingredients.FirstOrDefault(i => i.IngredientsID == int.Parse(di))));
 
             int s = 0;
-            food.oldstep.ForEach(os =>
+            food.stepIDs!.ForEach(sids =>
             {
-                EntityFood.Steps.FirstOrDefault(s => s.Text == os).Text = food.newstep[s];
+                EntityFood.Steps.FirstOrDefault(s => s.StepID == int.Parse(sids)).Text = food.newStep[s];
                 s++;
             });
+
+            food.deletedStep.ForEach(ds => EntityFood.Steps.Remove(EntityFood.Steps.FirstOrDefault(s => s.StepID == int.Parse(ds))!));
 
             EntityFood.Ftypes.Clear();
             food.ftypes.ForEach(ft => EntityFood.Ftypes.Add(_context.Ftypes.FirstOrDefault(f => f.TypeID == int.Parse(ft))));
@@ -123,6 +126,6 @@ public class EfFoodRepository : IFoodRepository
             model.ftypeIds.ForEach(ft => model.food.Ftypes.Add(_context.Ftypes.FirstOrDefault(f => f.TypeID == ft)));
             _context.SaveChanges();
         }
-        
+
     }
 }

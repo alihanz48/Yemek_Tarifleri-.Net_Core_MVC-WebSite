@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri\\YemekTarifleri\\YemekTarifleri.csproj": {}
+    "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri-Site\\YemekTarifleri-v2\\YemekTarifleri\\YemekTarifleri.csproj": {}
   },
   "projects": {
-    "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri\\YemekTarifleri\\YemekTarifleri.csproj": {
+    "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri-Site\\YemekTarifleri-v2\\YemekTarifleri\\YemekTarifleri.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri\\YemekTarifleri\\YemekTarifleri.csproj",
+        "projectUniqueName": "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri-Site\\YemekTarifleri-v2\\YemekTarifleri\\YemekTarifleri.csproj",
         "projectName": "YemekTarifleri",
-        "projectPath": "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri\\YemekTarifleri\\YemekTarifleri.csproj",
+        "projectPath": "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri-Site\\YemekTarifleri-v2\\YemekTarifleri\\YemekTarifleri.csproj",
         "packagesPath": "C:\\Users\\AlihanDursun\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri\\YemekTarifleri\\obj\\",
+        "outputPath": "C:\\Users\\AlihanDursun\\Desktop\\asp.net_core\\YemekTarifleri-Site\\YemekTarifleri-v2\\YemekTarifleri\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

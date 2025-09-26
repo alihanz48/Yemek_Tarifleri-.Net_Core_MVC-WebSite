@@ -61,6 +61,7 @@
 
         <!-- Sağ: Form -->
         <div class="col-md-7">
+            <input type="hidden" id="foodEditUrl" value="@Url.Action("FoodEdit","Food")">
             <div class="mb-4">
                 <label class="form-label" for="foodName">Yemeğin İsmi</label>
                 <div id="fname"></div>
@@ -85,14 +86,15 @@
                 </div>
                 <ul class="list-group" id="ingredients">
                     <!-- içindekiler -->
-                    @foreach (string ingredient in Model.ingredients)
+                    <!-- ******* -->
+                    @foreach (Ingredient ingredient in Model.ingredients)
                     {
-                        <div id="Ingredient" name="IngredientDiv">
+                        <div class="ingredient-item" data-id="@ingredient.IngredientsID">
                             <li class="list-group-item d-flex justify-content-between">
                                 <div class="d-flex edit-area">
                                     <i class="bi bi-arrow-right"></i>
-                                    <p class="mb-0 ms-2" id="text">@ingredient</p>
-                                    <input type="hidden" id="iinpt" name="ingredientsInput" value="@ingredient">
+                                    <p class="mb-0 ms-2" name="IngredientsText">@ingredient.Text</p>
+                                    <input type="hidden" name="IngredientsInput" value="@ingredient.Text">
                                 </div>
                                 <div>
                                     <button class="btn btn-primary delIngredient" type="button"><i
@@ -116,14 +118,14 @@
                 </div>
                 <ol class="list-group list-group-numbered" id="steps">
                     <!-- adımlar -->
-                    @foreach (string step in Model.steps)
+                    @foreach (Step step in Model.steps)
                     {
-                        <div id="step">
+                        <div class="step-item" data-id="@step.StepID">
                             <li class="list-group-item d-flex justify-content-between">
-                                <div class="d-flex" id="sdiv">
+                                <div class="d-flex edit-area">
                                     <i class="bi bi-arrow-right"></i>
-                                    <p class="mb-0 ms-2" id="stext">@step</p>
-                                    <input type="hidden" id="sinpt" name="stepsInput" value="@step">
+                                    <p class="mb-0 ms-2" name="stepsText">@step.Text</p>
+                                    <input type="hidden" name="stepsInput" value="@step.Text">
                                 </div>
                                 <div>
                                     <button class="btn btn-primary delStep" type="button"><i
@@ -160,182 +162,4 @@
         </div> <!-- ./col-md-7 -->
     </div> <!-- ./row -->
 </div> <!-- ./container -->
-
-<script>
-    $(document).ready(function () {
-
-        var formdata = new FormData();
-        var selectedImages = [];
-
-        $(document).on("click", ".delete-image", function () {
-            if ($(this).closest('#f-images').find('div[name="photoDiv"]').length == 1) {
-                alert("Tüm resimler silinemez!!!");
-            } else {
-                delete selectedImages[$(this).closest('div[name="photoDiv2"]').data("id")];
-                $(this).closest('div[name="photoDiv"]').remove();
-                formdata.append("deletedImg", $(this).closest('div[name="photoDiv"]').find(".deletedImg").val());
-            }
-
-        })
-
-
-        $(document).on("change", "#images", function () {
-            selectedImages = [...this.files];
-            [...this.files].forEach((img) => {
-
-                const url = URL.createObjectURL(img);
-                $("#f-images").append(`
-            <div class="col-4 position-relative" name="photoDiv">
-                <div class="photo-box border rounded p-1 mb-2" name="photoDiv2" data-id="${selectedImages.indexOf(img)}">
-                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 delete-image" title="Sil" style="z-index: 2;">&times;</button>
-                    <img src="${url}" style="width: 100%; height: auto;" class="img-fluid rounded" />
-                </div>
-            </div>
-               `);
-            });
-
-        });
-
-        $(document).on("click", ".delIngredient", function () {
-            formdata.append("deletedIngredients", $(this).closest('div[name="IngredientDiv"]').find("#iinpt").val())
-            $(this).closest('div[name="IngredientDiv"]').remove();
-        })
-
-        $(document).on("click", ".editIngredient", function () {
-
-            var ingText = $(this).closest('div[name="IngredientDiv"]').find("#iinpt").val();
-            $(this).closest('div[name="IngredientDiv"]').find("#text").remove();
-            $(this).closest('div[name="IngredientDiv"]').find("#iinpt").remove();
-            $(this).closest('div[name="IngredientDiv"]').find(".edit-area").append(`<input class="form-control" id="newIngredient" value="${ingText}">`);
-            $(this).closest('div[name="IngredientDiv"]').find(".edit-area").append(`<button class="btn btn-success editOKIngredient" id="ingOKbtn"><i class="bi bi-check2"></i></button>`);
-            formdata.append("oldIng", ingText);
-        })
-
-        $(document).on("click", ".editOKIngredient", function () {
-            var newText = $(this).closest('div[name="IngredientDiv"]').find("#newIngredient").val();
-            $(this).closest('div[name="IngredientDiv"]').find(".edit-area").append(`
-              <p class="mb-0 ms-2" id="text">${newText}</p>
-              <input type="hidden" id="iinpt" name="ingredientsInput" value="${newText}">
-            `);
-            $(this).closest('div[name="IngredientDiv"]').find("#newIngredient").remove();
-            $(this).closest('div[name="IngredientDiv"]').find(".editOKIngredient").remove();
-            formdata.append("newIng", newText);
-        })
-
-
-
-        $(document).on("click", ".delStep", function () {
-            formdata.append("deletedStep", $(this).closest('div[id="step"]').find("#sinpt").val())
-            $(this).closest('div[id="step"]').remove();
-        })
-
-        $(document).on("click", ".editStep", function () {
-
-            var stepText = $(this).closest('div[id="step"]').find("#sinpt").val();
-            $(this).closest('div[id="step"]').find("#sinpt").remove();
-            $(this).closest('div[id="step"]').find("#stext").remove();
-            $(this).closest('div[id="step"]').find("#sdiv").append(`<input class="form-control" id="newStep" value="${stepText}">`);
-            $(this).closest('div[id="step"]').find("#sdiv").append(`<button class="btn btn-success editOKStep" id="stepOKbtn"><i class="bi bi-check2"></i></button>`);
-            formdata.append("oldstep", stepText);
-        })
-
-        $(document).on("click", ".editOKStep", function () {
-            var newstepText = $(this).closest('div[id="step"]').find("#newStep").val();
-            $(this).closest('div[id="step"]').find("#sdiv").append(`
-              <p class="mb-0 ms-2" id="stext">${newstepText}</p>
-              <input type="hidden" id="sinpt" name="stepsInput" value="${newstepText}">
-            `);
-            $(this).closest('div[id="step"]').find("#newStep").remove();
-            $(this).closest('div[id="step"]').find(".editOKStep").remove();
-            formdata.append("newstep", newstepText);
-        })
-
-        $("#addIngredient").click(function () {
-            var ing = $("#ingredientText").val();
-            formdata.append("addIng", ing);
-
-            $('#ingredients').append(`<div id="Ingredient" name="IngredientDiv">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div class="d-flex edit-area">
-                                    <i class="bi bi-arrow-right"></i>
-                                    <p class="mb-0 ms-2" id="text">${ing}</p>
-                                    <input type="hidden" id="iinpt" name="ingredientsInput" value="${ing}">
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary delIngredient" type="button"><i
-                                            class="bi bi-trash3"></i></button>
-                                    <button class="btn btn-danger editIngredient" type="button"><i
-                                            class="bi bi-pencil"></i></button>
-                                </div>
-                            </li>
-                        </div>
-            `);
-
-            $("#ingredientText").val('');
-        });
-
-        $("#Addsteps").click(function () {
-            var step = $("#stepText").val();
-            formdata.append("addStep", step);
-
-            $("#steps").append(`<div id="step">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div class="d-flex" id="sdiv">
-                                    <i class="bi bi-arrow-right"></i>
-                                    <p class="mb-0 ms-2" id="stext">${step}</p>
-                                    <input type="hidden" id="sinpt" name="stepsInput" value="${step}">
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary delStep" type="button"><i
-                                            class="bi bi-trash3"></i></button>
-                                    <button class="btn btn-danger editStep" type="button"><i
-                                            class="bi bi-pencil"></i></button>
-                                </div>
-                            </li>
-                        </div>`);
-        });
-
-
-
-        $("#EditFood").click(function (event) {
-            event.preventDefault();
-            formdata.append("url", $("#url").val());
-            formdata.append("FoodName", $("#foodName").val());
-            formdata.append("Aciklama", $("#foodDescription").val());
-
-            //formdata addIng ile yeni ingredientler kayıt ediliyor.
-            //formdata addStep ile yeni stepler kayıt ediliyor.
-
-            $('input[name="ftypeIDs"]:checked').map(function () {
-                formdata.append("ftypes", $(this).val());
-            }).get();
-
-            selectedImages.forEach((img) => {
-                formdata.append("img", img);
-            });
-
-
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("FoodEdit")',
-                dataType: 'json',
-                data: formdata,
-                contentType: false,
-                processData: false,
-                success: function (result) {
-                    $("#addCheck").append(`
-              <div class="alert alert-success" role="alert">
-                Yemeğiniz başarıyla güncellendi !  Yönlendiriliyorsunuz...
-              </div>
-             `);
-                    setTimeout(function () {
-                        window.location.assign("/Users/MyAccount");
-                    }, 1000);
-                }
-            })
-        });
-
-
-    });
-</script>
+<script src="/js/Food/foodEdit.js"></script>

@@ -32,7 +32,7 @@ namespace YemekTarifleri.Controllers
         public async Task<IActionResult> AddFood()
         {
             AddFoodViewModel food = new AddFoodViewModel();
-            food.Ftypes = _ftypeRepository.Ftypes.ToList();
+            food.Ftypes = await _ftypeRepository.Ftypes.ToListAsync();
             return View(food);
         }
 
@@ -70,7 +70,7 @@ namespace YemekTarifleri.Controllers
                 tarih = DateTime.Now,
                 url = securetokengenerator.Generate().Replace("/", "a").Replace("\\", "b").Replace("?", "c").Replace("#", "d"),
                 UserID = int.Parse(userID),
-                Confirmation = FoodStatus.Pending,
+                Confirmation = User.FindFirstValue(ClaimTypes.Role)=="admin"? FoodStatus.Confirm : FoodStatus.Pending ,
                 Ingredients = ingredientList,
                 Steps = stepList,
                 Images = imageList,
@@ -118,13 +118,8 @@ namespace YemekTarifleri.Controllers
 
             if (food != null)
             {
-                List<string> foodIng = new List<string>();
-                List<string> steps = new List<string>();
                 List<string> images = new List<string>();
                 List<int> ftypesID = new List<int>();
-
-                food.Ingredients.ToList().ForEach(x => foodIng.Add(x.Text));
-                food.Steps.ToList().ForEach(x => steps.Add(x.Text));
 
                 food.Images.ToList().ForEach(x => images.Add(x.name));
                 food.Ftypes.ToList().ForEach(x => ftypesID.Add(Convert.ToInt32(x.TypeID)));
@@ -133,8 +128,8 @@ namespace YemekTarifleri.Controllers
                 {
                     isim = food.isim,
                     aciklama = food.aciklama,
-                    ingredients = foodIng,
-                    steps = steps,
+                    ingredients = food.Ingredients.ToList(),
+                    steps = food.Steps.ToList(),
                     Ftypes = _ftypeRepository.Ftypes.ToList(),
                     imgForEdit = images,
                     selectFtypes = ftypesID,
@@ -149,7 +144,7 @@ namespace YemekTarifleri.Controllers
         }
 
         [HttpPost]
-        public JsonResult FoodEdit(string FoodName, string Aciklama, List<string> deletedImg, List<IFormFile> img, List<string> deletedIngredients, List<string> oldIng, List<string> newIng, List<string> deletedStep, List<string> oldstep, List<string> newstep, string url, List<string> ftypes, List<string> addStep, List<string> addIng)
+        public JsonResult FoodEdit(string FoodName, string Aciklama, List<string> deletedImg, List<IFormFile> img, List<string> deletedIngredients, List<string> ingredientIDs, List<string> newIng, List<string> deletedStep, List<string> stepIDs, List<string> newStep, string url, List<string> ftypes, List<string> addStep, List<string> addIng)
         {
 
             _foodRepository.EditFood(new FoodEditModels
@@ -157,16 +152,16 @@ namespace YemekTarifleri.Controllers
                 foodUrl = url,
                 FoodName = FoodName,
                 Aciklama = Aciklama,
-                Confirmation = FoodStatus.Pending,
+                Confirmation = User.FindFirstValue(ClaimTypes.Role)=="admin"? FoodStatus.Confirm : FoodStatus.Pending ,
                 EditTime = DateTime.Now.Date,
                 deletedImg = deletedImg,
                 img = img,
                 deletedIngredients = deletedIngredients,
-                oldIng = oldIng,
+                ingredientIDs = ingredientIDs,
                 newIng = newIng,
                 deletedStep = deletedStep,
-                oldstep = oldstep,
-                newstep = newstep,
+                stepIDs = stepIDs,
+                newStep = newStep,
                 ftypes = ftypes,
                 addIng = addIng,
                 addStep = addStep

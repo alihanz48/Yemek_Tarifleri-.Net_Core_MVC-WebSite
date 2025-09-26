@@ -45,10 +45,10 @@ namespace YemekTarifleri
                     userClaims.Add(new Claim(ClaimTypes.NameIdentifier, userCheck.UserId.ToString()));
                     userClaims.Add(new Claim(ClaimTypes.Email, userCheck.username));
                     userClaims.Add(new Claim(ClaimTypes.GivenName, userCheck.Name));
-                    userClaims.Add(new Claim(ClaimTypes.Role, userCheck.Roles.RoleName));
+                    userClaims.Add(new Claim(ClaimTypes.Role, userCheck.Roles.RoleName!));
                     userClaims.Add(new Claim(ClaimTypes.UserData, userCheck.avatarName!));
                     userClaims.Add(new Claim(ClaimTypes.Actor, userCheck.mail));
-
+                    
                     var ClaimsIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var authPrpperties = new AuthenticationProperties

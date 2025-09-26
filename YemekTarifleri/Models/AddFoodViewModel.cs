@@ -7,9 +7,9 @@ namespace YemekTarifleri.Models{
         public string? isim { get; set; }
         public string? aciklama { get; set; }
 
-        public List<string>? ingredients { get; set; }
+        public List<Ingredient>? ingredients { get; set; }
 
-        public List<string>? steps { get; set; }
+        public List<Step>? steps { get; set; }
 
         public List<Ftype>? Ftypes { get; set; }
         public List<IFormFile>? Files { get; set; }
