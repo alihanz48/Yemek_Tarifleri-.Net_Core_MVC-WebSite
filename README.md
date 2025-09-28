@@ -13,6 +13,9 @@
 - Kategorilere göre tarif filtreleme.
 - Modern ve kullanıcı dostu arayüz.
 - Hızlı ve güvenli veri yönetimi.
+- Tariflere yorum ekleme.
+- Tarifleri beğenme.
+- Yemeklerin yayınlanması,yeni kategori eklenmesi ve yetkilendirmeler ancak admin rolüne sahip kullanıcılar tarafından yapılabilir.
 
 ---
 
