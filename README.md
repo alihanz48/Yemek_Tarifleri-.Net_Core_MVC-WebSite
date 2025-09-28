@@ -1,3 +1,30 @@
+
+# 🍲 Yemek Tarifleri Web Uygulaması
+
+**Yemek Tarifleri**, kullanıcıların çeşitli yemek tariflerini görebileceği, ekleyebileceği ve yönetebileceği bir *.NET Core MVC Web Uygulaması*dır.
+
+---
+
+
+📝 Özellikler
+
+- Kullanıcılar için **tarif listeleme, detay görüntüleme**.
+- Tarif ekleme ve düzenleme fonksiyonları.
+- Kategorilere göre tarif filtreleme.
+- Modern ve kullanıcı dostu arayüz.
+- Hızlı ve güvenli veri yönetimi.
+
+---
+
+
+💻 Kullanılan Teknolojiler
+
+- Backend: C#, .NET Core MVC, Entity Framework Core, LINQ-ORM, Jquery, Claims Identity vb.
+- Frontend: HTML5, CSS3, JavaScript, Bootstrap
+- Veritabanı: MySQL
+
+---
+
 <img width="960" height="480" alt="Image" src="https://github.com/user-attachments/assets/ec0335a9-8e58-4770-8af3-f26977ad1d2c" />
 <img width="960" height="480" alt="Image" src="https://github.com/user-attachments/assets/fe859b39-1910-4518-a320-81a2bbaf1957" />
 <img width="960" height="480" alt="Image" src="https://github.com/user-attachments/assets/bf8285f2-af4a-47ee-8848-69fd1fcde512" />
