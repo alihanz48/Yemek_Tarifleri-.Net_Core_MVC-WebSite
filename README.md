@@ -1,5 +1,5 @@
 
-# 🍲 Yemek Tarifleri Web Uygulaması
+# 🍲 Yemek Tarifleri Web Sitesi
 
 **Yemek Tarifleri**, kullanıcıların çeşitli yemek tariflerini görebileceği, ekleyebileceği ve yönetebileceği bir *.NET Core MVC Web Uygulaması*dır.
 
@@ -15,6 +15,7 @@
 - Hızlı ve güvenli veri yönetimi.
 - Tariflere yorum ekleme.
 - Tarifleri beğenme.
+- Tarifleri kaç kişinin görüntülediğini görme.
 - Yemeklerin yayınlanması,yeni kategori eklenmesi ve yetkilendirmeler ancak admin rolüne sahip kullanıcılar tarafından yapılabilir.
 
 ---
